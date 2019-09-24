@@ -4,26 +4,31 @@
 
 (defonce my-aliases (atom nil))
 
+(defn restore-aliases []
+  (doseq [aliased @my-aliases]
+    (let [sym (first aliased)
+          target (second aliased)]
+      (ns-unalias *ns* sym)
+      (alias sym (symbol (.toString target))))))
+
 (defn reload []
   (try
     (reset! my-aliases (merge @my-aliases (ns-aliases *ns*)))
-    (when (nil? (repl/refresh :after 'clojure.main/repl-prompt))
-      (doseq [aliased @my-aliases]
-        (let [sym (first aliased)
-              target (second aliased)]
-          (ns-unalias *ns* sym)
-          (alias sym (symbol (.toString target))))))
-  (catch Throwable e nil)))
+    (repl/refresh :after 'repl-cud.core/restore-aliases)
+  (catch Throwable e (println e))))
 
 (defn auto-reload []
   (let [track (tracker/ns-tracker ["./src" "./test"])
-        my-ns *ns*]
+        my-ns *ns*
+        my-out *out*]
     (doto
       (Thread.
-        #(while true (binding [*ns* my-ns]
+        #(while true (binding [*ns* my-ns
+                               *out* my-out]
+                       (Thread/sleep 500)
                        (when (pos? (count (track)))
-                         (reload)
-                         (println "...finished reloading")))
-           (Thread/sleep 500)))
+                         (when (nil? (reload))
+                           (printf "\n%s=> " (ns-name *ns*))
+                           (.flush *out*))))))
       (.setDaemon true)
       (.start))))

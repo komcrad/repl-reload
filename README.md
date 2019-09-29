@@ -1,10 +1,19 @@
 # repl-cud
 
-A Clojure library designed to ... well, that part is up to you.
+Reloads changed namespaces automatically.
 
 ## Usage
 
-FIXME
+I like to us `.lein/profiles.clj` for this  
+
+```
+{:user {:dependencies [[repl-cud "0.1.0"]]
+        :repl-options
+        {:init (do (require 'clojure.tools.namespace.repl 'repl-cud.core)
+                   (clojure.tools.namespace.repl/refresh)
+                   (repl-cud.core/auto-reload)
+                   (use 'clojure.repl))}}}
+```
 
 ## License
 

@@ -1,10 +1,10 @@
-# repl-cud
+# repl-reload
 
-Reloads changed namespaces automatically.
+A clojure library for reloading changed namespaces on save.
 
 ## Usage
 
-I like to us `.lein/profiles.clj` for this  
+I like to use `.lein/profiles.clj` for this  
 
 ```
 {:user {:dependencies [[komcrad/repl-reload "0.1.0"]]
@@ -15,17 +15,10 @@ I like to us `.lein/profiles.clj` for this
                    (use 'clojure.repl))}}}
 ```
 
-## License
+I also like to create a blank user.clj in my projects for my repl to use
 
-Copyright © 2019 FIXME
+```
+{:repl-options {:init-ns your-project.user}}
+```
 
-This program and the accompanying materials are made available under the
-terms of the Eclipse Public License 2.0 which is available at
-http://www.eclipse.org/legal/epl-2.0.
-
-This Source Code may also be made available under the following Secondary
-Licenses when the conditions for such availability set forth in the Eclipse
-Public License, v. 2.0 are satisfied: GNU General Public License as published by
-the Free Software Foundation, either version 2 of the License, or (at your
-option) any later version, with the GNU Classpath Exception which is available
-at https://www.gnu.org/software/classpath/license.html.
+This way I can def stuff in that ns but when ns are reloaded, since user is a blank ns, my symbols stick around

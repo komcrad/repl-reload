@@ -1,4 +1,4 @@
-(ns repl-cud.core
+(ns repl-reload.core
   (:require [clojure.tools.namespace.repl :as repl]
             [ns-tracker.core :as tracker]))
 

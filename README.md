@@ -7,11 +7,11 @@ Reloads changed namespaces automatically.
 I like to us `.lein/profiles.clj` for this  
 
 ```
-{:user {:dependencies [[repl-cud "0.1.0"]]
+{:user {:dependencies [[komcrad/repl-reload "0.1.0"]]
         :repl-options
-        {:init (do (require 'clojure.tools.namespace.repl 'repl-cud.core)
+        {:init (do (require 'clojure.tools.namespace.repl 'repl-reload.core)
                    (clojure.tools.namespace.repl/refresh)
-                   (repl-cud.core/auto-reload)
+                   (repl-reload.core/auto-reload)
                    (use 'clojure.repl))}}}
 ```
 

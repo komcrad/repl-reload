@@ -1,4 +1,4 @@
-(ns repl-cud.core
+(ns repl-reload.core
   (:require [clojure.tools.namespace.repl :as repl]
             [ns-tracker.core :as tracker]))
 
@@ -14,7 +14,7 @@
 (defn reload []
   (try
     (reset! my-aliases (merge @my-aliases (ns-aliases *ns*)))
-    (repl/refresh :after 'repl-cud.core/restore-aliases)
+    (repl/refresh :after 'repl-reload.core/restore-aliases)
   (catch Throwable e (println e))))
 
 (defn auto-reload []

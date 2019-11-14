@@ -2,6 +2,8 @@
 
 A clojure library for reloading changed namespaces on save.
 
+[![Clojars Project](https://img.shields.io/clojars/v/komcrad/repl-reload.svg)](https://clojars.org/komcrad/repl-reload)
+
 ## Usage
 
 I like to use `.lein/profiles.clj` for this  

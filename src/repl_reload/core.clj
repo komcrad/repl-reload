@@ -18,7 +18,8 @@
   (catch Throwable e (println e))))
 
 (defn auto-reload []
-  (let [track (tracker/ns-tracker ["./src" "./test"])
+  (let [track (tracker/ns-tracker
+                (mapv str (clojure.java.classpath/classpath-directories)))
         my-ns *ns*
         my-out *out*]
     (doto

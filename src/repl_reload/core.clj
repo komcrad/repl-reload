@@ -14,22 +14,27 @@
 (defn reload []
   (try
     (reset! my-aliases (merge @my-aliases (ns-aliases *ns*)))
-    (repl/refresh :after 'repl-reload.core/restore-aliases)
-  (catch Throwable e (println e))))
+    (let [loaded (repl/refresh :after 'repl-reload.core/restore-aliases)]
+      (if (nil? loaded)
+        (do (printf "\n%s=> " (ns-name *ns*))
+            (.flush *out*))
+        (do (println loaded)
+            (printf "\n%s\n%s=> "
+                    loaded (ns-name *ns*))
+            (.flush *out*))))
+    (catch Throwable e (println e))))
 
 (defn auto-reload []
   (let [track (tracker/ns-tracker
-                (mapv str (clojure.java.classpath/classpath-directories)))
+               (mapv str (clojure.java.classpath/classpath-directories)))
         my-ns *ns*
         my-out *out*]
     (doto
-      (Thread.
-        #(while true (binding [*ns* my-ns
-                               *out* my-out]
-                       (Thread/sleep 500)
-                       (when (pos? (count (track)))
-                         (when (nil? (reload))
-                           (printf "\n%s=> " (ns-name *ns*))
-                           (.flush *out*))))))
+     (Thread.
+      #(while true (binding [*ns* my-ns
+                             *out* my-out]
+                     (Thread/sleep 500)
+                     (when (pos? (count (track)))
+                       (reload)))))
       (.setDaemon true)
       (.start))))

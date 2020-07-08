@@ -12,7 +12,7 @@ I like to use `.lein/profiles.clj` for this
 {:user {:dependencies [[komcrad/repl-reload "0.1.0"]]
         :repl-options
         {:init (do (require 'clojure.tools.namespace.repl 'repl-reload.core)
-                   (clojure.tools.namespace.repl/refresh)
+                   (repl-reload.core/reload)
                    (repl-reload.core/auto-reload)
                    (use 'clojure.repl))}}}
 ```

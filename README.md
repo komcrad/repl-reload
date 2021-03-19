@@ -9,7 +9,7 @@ A clojure library for reloading changed namespaces on save.
 I like to use `.lein/profiles.clj` for this  
 
 ```
-{:user {:dependencies [[komcrad/repl-reload "0.1.0"]]
+{:user {:dependencies [[komcrad/repl-reload "0.1.2"]]
         :repl-options
         {:init (do (require 'clojure.tools.namespace.repl 'repl-reload.core)
                    (repl-reload.core/reload)

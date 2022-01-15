@@ -1,5 +1,6 @@
 (ns repl-reload.core
   (:require [clojure.tools.namespace.repl :as repl]
+            [clojure.java.classpath :as classpath]
             [ns-tracker.core :as tracker]))
 
 (defonce my-aliases (atom nil))
@@ -26,7 +27,7 @@
 
 (defn auto-reload []
   (let [track (tracker/ns-tracker
-               (mapv str (clojure.java.classpath/classpath-directories)))
+               (mapv str (classpath/classpath-directories)))
         my-ns *ns*
         my-out *out*]
     (doto

@@ -1,10 +1,23 @@
 (ns repl-reload.core
   (:require [clojure.tools.namespace.repl :as repl]
-            [ns-tracker.core :as tracker]))
+            [clojure.string :as strs]
+            [ns-tracker.core :as tracker]
+            [clojure.java.classpath])
+  (:import [java.util.regex Pattern]))
 
 (defonce my-aliases (atom nil))
 
+(defn are-you-there-mount []
+  (boolean
+   (try
+     (require '[mount.core])
+     (resolve 'mount.core/start)
+     (catch Exception e))))
+
 (defn restore-aliases []
+  (when (are-you-there-mount)
+    (eval
+     '(mount.core/start)))
   (doseq [aliased @my-aliases]
     (let [sym (first aliased)
           target (second aliased)]
@@ -24,9 +37,13 @@
             (.flush *out*))))
     (catch Throwable e (println e))))
 
-(defn auto-reload []
-  (let [track (tracker/ns-tracker
-               (mapv str (clojure.java.classpath/classpath-directories)))
+(defn get-tracked-dirs [coll]
+  (let [paths (mapv str (clojure.java.classpath/classpath-directories))
+        pattern (re-pattern (strs/join "|" (map #(Pattern/quote %) coll)))]
+    (filter #(not (re-find pattern %)) paths)))
+
+(defn auto-reload [& args]
+  (let [track (tracker/ns-tracker (get-tracked-dirs args))
         my-ns *ns*
         my-out *out*]
     (doto
@@ -35,6 +52,8 @@
                              *out* my-out]
                      (Thread/sleep 500)
                      (when (pos? (count (track)))
+                       (when (are-you-there-mount)
+                         (eval '(mount.core/stop)))
                        (reload)))))
       (.setDaemon true)
       (.start))))

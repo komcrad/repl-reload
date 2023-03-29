@@ -1,4 +1,4 @@
-(defproject komcrad/repl-reload "0.1.2"
+(defproject komcrad/repl-reload "0.1.3-SNAPSHOT"
   :description "Reloads the repl on file change"
   :url "https://github.com/komcrad/repl-reload"
   :license {:name "EPL-2.0"
